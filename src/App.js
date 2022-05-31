@@ -1,23 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
-
+import './App.scss';
+import Board from './components/Board/Board';
 function App() {
+  const playerRed = '';
+  const playerYellow = '';
+  const currentPlayer = playerRed;
+
+  const gameOver = false;
+
+  const rows = 6;
+  const columns = 7;
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>Connect Four</h1>
       </header>
+      <main>
+        <div className="Board-Container">
+          <Board />
+        </div>
+      </main>
     </div>
   );
 }

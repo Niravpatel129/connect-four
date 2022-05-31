@@ -1,0 +1,29 @@
+.Board {
+  //   background-color: #282c34;
+
+  display: flex;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .tile {
+    background-color: #282c34;
+    border: 1px solid black;
+    height: 80px;
+    flex: 1 0 13%; /* explanation below */
+    color: white;
+    width: 25px;
+
+    &.p1 {
+      background-color: red;
+    }
+
+    &.p2 {
+      background-color: blue;
+    }
+  }
+
+  .hidden {
+    visibility: hidden;
+  }
+}
