@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 import Swal from 'sweetalert2';
 import { winningArrays } from '../../utils/winningArrays';
 import './Board.scss';
-const socket = io('localhost:4000');
+const socket = io('https://asdasdasdkllk.herokuapp.com/');
 
 export default function Board({ id }) {
   const [canMove, setCanMove] = useState(true);
