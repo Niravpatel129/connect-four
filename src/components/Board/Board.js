@@ -1,12 +1,60 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
+import Swal from 'sweetalert2';
 import { winningArrays } from '../../utils/winningArrays';
 import './Board.scss';
+const socket = io('localhost:4000');
 
-export default function Board() {
+export default function Board({ id }) {
+  const [canMove, setCanMove] = useState(true);
   const [turn, setTurn] = useState('player-one');
-  const [winner, setWinner] = useState('');
   const [playerOneSpots, setPlayerOneSpots] = useState([]);
   const [playerTwoSpots, setPlayerTwoSpots] = useState([]);
+
+  useEffect(() => {
+    socket.emit('join', id);
+  }, [id]);
+
+  useEffect(() => {
+    socket.on('turn', () => {
+      console.log('turn');
+      setCanMove(true);
+      turn === 'player-one' ? setTurn('player-two') : setTurn('player-one');
+    });
+
+    socket.on('setTurn', (turnData) => {
+      setTurn(turnData);
+    });
+
+    socket.on('playerOneMoves', (turnData) => {
+      setPlayerOneSpots(turnData);
+    });
+
+    socket.on('playerTwoMoves', (turnData) => {
+      setPlayerTwoSpots(turnData);
+    });
+
+    socket.on('winner', (winner) => {
+      Swal.fire({
+        title: `${winner === 'player-one' ? 'red' : 'blue'} wins!`,
+        width: 600,
+        padding: '3em',
+        color: '#716add',
+        backdrop: `
+          rgba(0,0,123,0.4)
+          url("https://c.tenor.com/xzjlrhYq_lQAAAAi/cat-nyan-cat.gif")
+          left top
+          no-repeat
+        `,
+      }).then(() => {
+        socket.emit('reset');
+      });
+    });
+  }, [turn]);
+
+  socket.on('reset', () => {
+    resetGame();
+  });
 
   const resetGame = () => {
     window.location.reload(false);
@@ -22,9 +70,7 @@ export default function Board() {
         playerOneSpots.includes(c) &&
         playerOneSpots.includes(d)
       ) {
-        setWinner('player-one');
-        alert('player one wins');
-        resetGame();
+        socket.emit('winner', 'player-one');
         return null;
       } else if (
         playerTwoSpots.includes(a) &&
@@ -32,17 +78,21 @@ export default function Board() {
         playerTwoSpots.includes(c) &&
         playerTwoSpots.includes(d)
       ) {
-        setWinner('player-two');
-        alert('player two wins');
-        resetGame();
+        socket.emit('winner', 'player-two');
+        // resetGame();
         return null;
       }
     }
   };
 
   const handleOnClick = (i) => {
+    if (!canMove) {
+      alert('not your turn, wait for your turn');
+      return null;
+    }
+
     if (!document.getElementById(i + 7).className.includes('last')) {
-      alert(`pick the bottom`);
+      alert(`pick the bottom, gravity dosen't exist yet`);
       return null;
     }
 
@@ -50,17 +100,22 @@ export default function Board() {
       playerOneSpots.push(i);
       setPlayerOneSpots([...playerOneSpots, i]);
       setTurn('player-two');
+      socket.emit('playerOneMoves', [...playerOneSpots, i]);
     }
     if (turn === 'player-two') {
       setPlayerTwoSpots([...playerTwoSpots, i]);
+      console.log('🚀 playerTwoSpots', i);
       setTurn('player-one');
+      socket.emit('playerTwoMoves', [...playerTwoSpots, i]);
     }
+
+    setCanMove(false);
+    socket.emit('turn');
 
     checkWinners();
   };
 
   const renderTiles = () => {
-    console.log('rendering!');
     const tiles = [];
     const lastRow = [42, 43, 44, 45, 46, 47, 48];
 
@@ -80,8 +135,7 @@ export default function Board() {
 
   return (
     <>
-      <h2>Turn: {turn}</h2>
-      <h2>{winner}</h2>
+      <h2>Turn: {turn === 'player-one' ? '🔴' : '🔵'}</h2>
       <div className="Board">{renderTiles()}</div>
     </>
   );
