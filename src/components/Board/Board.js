@@ -42,12 +42,7 @@ export default function Board() {
 
   const handleOnClick = (i) => {
     if (!document.getElementById(i + 7).className.includes('last')) {
-      alert(`can't go here`);
-      return null;
-    }
-
-    if (playerOneSpots.includes(i) || playerTwoSpots.includes(i)) {
-      alert(`can't go here`);
+      alert(`pick the bottom`);
       return null;
     }
 

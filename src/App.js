@@ -1,6 +1,15 @@
+import { io } from 'socket.io-client';
 import './App.scss';
 import Board from './components/Board/Board';
+
 function App() {
+  const socket = io('localhost:4000');
+
+  socket.io.on('connection', (attempt) => {
+    console.log('connected');
+    // ...
+  });
+
   return (
     <div className="App">
       <header className="App-header">
