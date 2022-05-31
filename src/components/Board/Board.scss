@@ -1,5 +1,7 @@
 .Board {
-  //   background-color: #282c34;
+  background-color: #cfd3da;
+  padding: 10px;
+  border-radius: 20px;
 
   display: flex;
   margin: 0 auto;
@@ -13,6 +15,12 @@
     flex: 1 0 13%; /* explanation below */
     color: white;
     width: 25px;
+    border-radius: 100%;
+    margin: 3px;
+
+    &:hover {
+      background-color: #121417;
+    }
 
     &.p1 {
       background-color: red;
@@ -24,6 +32,6 @@
   }
 
   .hidden {
-    visibility: hidden;
+    display: none;
   }
 }

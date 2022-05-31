@@ -55,26 +55,27 @@ export default function Board() {
       playerOneSpots.push(i);
       setPlayerOneSpots([...playerOneSpots, i]);
       setTurn('player-two');
-      document.getElementById(i).innerHTML = 'Player 1';
-      document.getElementById(i)?.setAttribute('class', `p1 tile last`);
     }
     if (turn === 'player-two') {
       setPlayerTwoSpots([...playerTwoSpots, i]);
       setTurn('player-one');
-      document.getElementById(i).innerHTML = 'Player 2';
-      document.getElementById(i)?.setAttribute('class', `p2 tile last`);
     }
 
     checkWinners();
   };
 
   const renderTiles = () => {
+    console.log('rendering!');
     const tiles = [];
     const lastRow = [42, 43, 44, 45, 46, 47, 48];
 
     for (let i = 0; i < 49; i++) {
       let className = 'tile';
       if (lastRow.includes(i)) className = `${className} last hidden`;
+
+      // player moves
+      if (playerOneSpots.includes(i)) className = `${className} p1 last`;
+      if (playerTwoSpots.includes(i)) className = `${className} p2 last`;
 
       tiles.push(<div id={i} onClick={() => handleOnClick(i)} className={className} key={i}></div>);
     }
