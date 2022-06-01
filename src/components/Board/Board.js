@@ -99,13 +99,13 @@ export default function Board({ id }) {
     if (turn === 'player-one') {
       playerOneSpots.push(i);
       setPlayerOneSpots([...playerOneSpots, i]);
-      setTurn('player-two');
+      // setTurn('player-two');
       socket.emit('playerOneMoves', [...playerOneSpots, i]);
     }
     if (turn === 'player-two') {
       setPlayerTwoSpots([...playerTwoSpots, i]);
       console.log('🚀 playerTwoSpots', i);
-      setTurn('player-one');
+      // setTurn('player-one');
       socket.emit('playerTwoMoves', [...playerTwoSpots, i]);
     }
 
